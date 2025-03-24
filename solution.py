@@ -2,6 +2,9 @@ import json
 import csv
 import math
 
+RADIUS_OF_EARTH_IN_KILOETERS = 6378
+ACCURACY_OF_SENSORS_IN_METERS = 100
+
 def readJsonFile(filePath: str) -> list:
     try: 
         with open(filePath, 'r', encoding='utf-8') as file:
@@ -21,12 +24,12 @@ def readCsvFile(filePath: str) -> list:
 def convertStringToFloat(dataPoint: dict, key: str) -> dict:
     dataPoint[key] = float(dataPoint[key])
 
-def convertDegreesToRadians(degrees: float) -> float:
-    return degrees * math.pi / 180 
+def convertDegreesToRadians(dataPoint: dict, key: str) -> float:
+    dataPoint[key] = dataPoint[key] * math.pi / 180 
 
-def convertSphericalToCartesain(dataPoint: dict, radius: float) -> dict:
-    theta = dataPoint['longitude']
-    phi = dataPoint['latitude']
+def convertSphericalToCartesain(dataPoint: dict, radius: float, longitudeKey: str, latitudeKey: str) -> dict:
+    theta = dataPoint[longitudeKey]
+    phi = dataPoint[latitudeKey]
 
     dataPoint['x'] = radius * math.cos(phi) * math.cos(theta)
     dataPoint['y'] = radius * math.cos(phi) * math.sin(theta)
@@ -35,10 +38,10 @@ def convertSphericalToCartesain(dataPoint: dict, radius: float) -> dict:
 def convertDataPipeline(dataSet: list[dict]) -> list[dict]:
     for data in dataSet:
         convertStringToFloat(data, 'longitude')
-        data['longitude'] = convertDegreesToRadians(data['longitude'])
+        convertDegreesToRadians(data, 'longitude')
         convertStringToFloat(data, 'latitude')
-        data['latitude'] = convertDegreesToRadians(data['latitude'])
-        convertSphericalToCartesain(data, 6378)
+        convertDegreesToRadians(data, 'latitude')
+        convertSphericalToCartesain(data, RADIUS_OF_EARTH_IN_KILOETERS, 'longitude', 'latitude')
 
 # This uses the direction vector to compute distance (linear distance). Since the sensor range is so small compared to the raduis of the earth, the delta in distance from the curvature of the earth is negligible
 def computeDistanceBetweenTwoCartesianPoints(point1: dict, point2: dict) -> float:
@@ -70,7 +73,7 @@ if __name__ == "__main__":
     csvSensorData = readCsvFile("SensorData1.csv")
     jsonSensorData = readJsonFile("SensorData2.json")
 
-    correlatedData = getCorrelatedData(csvSensorData, jsonSensorData, 100)
+    correlatedData = getCorrelatedData(csvSensorData, jsonSensorData, ACCURACY_OF_SENSORS_IN_METERS)
 
     with open('output.json', 'w') as file:
         json.dump(correlatedData, file, indent=4)
