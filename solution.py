@@ -57,8 +57,8 @@ def getCorrelatedData(dataSet1: list, dataSet2: list, sensorRangeInMeters: float
     correlatedData = {}
     for dataPoint1 in dataSet1:
         for dataPoint2 in dataSet2:
-            distanceBetweenPointsInKilometers = computeDistanceBetweenTwoCartesianPoints(dataPoint1, dataPoint2)
-            if(distanceBetweenPointsInKilometers <= sensorRangeInMeters):
+            distanceBetweenPointsInMeters = computeDistanceBetweenTwoCartesianPoints(dataPoint1, dataPoint2)
+            if(distanceBetweenPointsInMeters <= sensorRangeInMeters):
                 correlatedData[dataPoint1['id']] = dataPoint2['id']
     
     return correlatedData
