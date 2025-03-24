@@ -2,7 +2,7 @@ import json
 import csv
 import math
 
-RADIUS_OF_EARTH_IN_KILOETERS = 6378
+RADIUS_OF_EARTH_IN_KILOMETERS = 6378
 ACCURACY_OF_SENSORS_IN_METERS = 100
 
 def readJsonFile(filePath: str) -> list:
@@ -41,7 +41,7 @@ def convertDataPipeline(dataSet: list[dict]) -> list[dict]:
         convertDegreesToRadians(data, 'longitude')
         convertStringToFloat(data, 'latitude')
         convertDegreesToRadians(data, 'latitude')
-        convertSphericalToCartesain(data, RADIUS_OF_EARTH_IN_KILOETERS, 'longitude', 'latitude')
+        convertSphericalToCartesain(data, RADIUS_OF_EARTH_IN_KILOMETERS, 'longitude', 'latitude')
 
 # This uses the direction vector to compute distance (linear distance). Since the sensor range is so small compared to the raduis of the earth, the delta in distance from the curvature of the earth is negligible
 def computeDistanceBetweenTwoCartesianPoints(point1: dict, point2: dict) -> float:
