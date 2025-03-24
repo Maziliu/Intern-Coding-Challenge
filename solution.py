@@ -64,7 +64,7 @@ def getCorrelatedData(dataSet1: list, dataSet2: list, sensorRangeInMeters: float
     return correlatedData
 
 # Approach
-# First take in the data and convert numbers to floats
+# First take in the data and convert string inputs to opratable floats
 # Then convert spherical longitude and latitude into cartesian x, y, z
 # Then for every data point in set 1, compute its distance from every data point in set 2. If they are within 100 meters, they correlate
 # Since we are matching all data points in one set with all the data points in the other, this solution has time complexity O(n^2) 
