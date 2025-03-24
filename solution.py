@@ -35,7 +35,7 @@ def convertSphericalToCartesain(dataPoint: dict, radius: float, longitudeKey: st
     dataPoint['y'] = radius * math.cos(phi) * math.sin(theta)
     dataPoint['z'] = radius * math.sin(phi)
 
-def convertDataPipeline(dataSet: list[dict]) -> list[dict]:
+def transformGeospatialData(dataSet: list[dict]) -> list[dict]:
     for data in dataSet:
         convertStringToFloat(data, 'longitude')
         convertDegreesToRadians(data, 'longitude')
@@ -51,8 +51,8 @@ def computeDistanceBetweenTwoCartesianPoints(point1: dict, point2: dict) -> floa
     return math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2 + (z1 - z2) ** 2)
 
 def getCorrelatedData(dataSet1: list, dataSet2: list, sensorRangeInMeters: float) -> dict:
-    convertDataPipeline(dataSet1)
-    convertDataPipeline(dataSet2)
+    transformGeospatialData(dataSet1)
+    transformGeospatialData(dataSet2)
     
     correlatedData = {}
     for dataPoint1 in dataSet1:
